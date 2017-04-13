@@ -4,17 +4,10 @@
     android:layout_height="match_parent"
     tools:context="routify.routify.Sightseeing_suggestions">
 
-    <!-- TODO: Update blank fragment layout -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="SIGHT
-S
-E
-E
-I
-N
-G" />
+        android:text="Sightseeing list" />
 
 
 </FrameLayout>

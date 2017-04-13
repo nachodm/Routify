@@ -170,7 +170,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
             }
         });
     }
-    private void showFABMenu(){
+    private void showFABMenu() {
         isFABOpen=true;
         fab1.animate().translationY(-getResources().getDimension(R.dimen.standard_240));
         fab2.animate().translationY(-getResources().getDimension(R.dimen.standard_180));
@@ -178,7 +178,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         fab4.animate().translationY(-getResources().getDimension(R.dimen.standard_60));
     }
 
-    private void closeFABMenu(){
+    private void closeFABMenu() {
         isFABOpen=false;
         fab1.animate().translationY(0);
         fab2.animate().translationY(0);
