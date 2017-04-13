@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -23,6 +24,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.Arrays;
 
 
 public class MapsFragment extends Fragment implements OnMapReadyCallback {
@@ -32,6 +34,11 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     public static final int MAX_INTERMEDIATE_POINTS = 50;
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
     LatLng[] route = new LatLng[MAX_INTERMEDIATE_POINTS];
+    boolean isFABOpen = false;
+    FloatingActionButton fab1;
+    FloatingActionButton fab2;
+    FloatingActionButton fab3;
+    FloatingActionButton fab4;
 
     @Nullable
     @Override
@@ -117,7 +124,66 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
 
                 }
             });
+            setUpFabs();
+
         }
+    }
+
+    private void setUpFabs() {
+        fab1 = (FloatingActionButton) mapView.findViewById(R.id.fab1);
+        fab2 = (FloatingActionButton) mapView.findViewById(R.id.fab2);
+        fab3 = (FloatingActionButton) mapView.findViewById(R.id.fab3);
+        fab4 = (FloatingActionButton) mapView.findViewById(R.id.fab4);
+        FloatingActionButton fab = (FloatingActionButton) mapView.findViewById(R.id.floatingActionButton);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!isFABOpen) {
+                    showFABMenu();
+                }
+                else {
+                    closeFABMenu();
+                }
+            }
+        });
+        fab1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            }
+        });
+        fab2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            }
+        });
+        fab3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            }
+        });
+        fab4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                counter = 1;
+                Arrays.fill(route, null);
+                mMap.clear();
+            }
+        });
+    }
+    private void showFABMenu(){
+        isFABOpen=true;
+        fab1.animate().translationY(-getResources().getDimension(R.dimen.standard_240));
+        fab2.animate().translationY(-getResources().getDimension(R.dimen.standard_180));
+        fab3.animate().translationY(-getResources().getDimension(R.dimen.standard_120));
+        fab4.animate().translationY(-getResources().getDimension(R.dimen.standard_60));
+    }
+
+    private void closeFABMenu(){
+        isFABOpen=false;
+        fab1.animate().translationY(0);
+        fab2.animate().translationY(0);
+        fab3.animate().translationY(0);
+        fab4.animate().translationY(0);
     }
 
     public void onDestroyView()
