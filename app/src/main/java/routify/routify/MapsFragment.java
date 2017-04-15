@@ -15,6 +15,7 @@ import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -109,8 +110,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         mMap.getUiSettings().setCompassEnabled(true);
 
+
         LatLng initPosition = new LatLng(60, 25);
-        mMap.addMarker(new MarkerOptions().position(initPosition).title("Your position"));
+        mMap.addMarker(new MarkerOptions().position(initPosition).title("I have to change this"));
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(initPosition, 7));
         if (mMap != null) {
             mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
