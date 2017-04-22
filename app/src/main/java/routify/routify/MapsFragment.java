@@ -3,7 +3,12 @@ package routify.routify;
 import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationManager;
+import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
@@ -12,6 +17,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,9 +27,10 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
 
 import java.util.Arrays;
 
@@ -40,6 +47,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     FloatingActionButton fab2;
     FloatingActionButton fab3;
     FloatingActionButton fab4;
+    LocationManager manager;
+    Criteria mCriteria;
 
     @Nullable
     @Override
@@ -53,13 +62,18 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
             e.printStackTrace();
         }
 
+       manager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
+        if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            Intent myIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+            startActivity(myIntent);
+        }
         return mapView;
+
     }
 
     public boolean checkLocationPermission() {
         if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission. ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
-            // Should we show an explanation?
             if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
                     Manifest.permission. ACCESS_FINE_LOCATION)) {
 
@@ -81,7 +95,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
                         .create()
                         .show();
 
-
             } else {
                 // No explanation needed, we can request the permission.
                 ActivityCompat.requestPermissions(getActivity(),
@@ -96,7 +109,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-
         mMap = googleMap;
 
         if (checkLocationPermission()) {
@@ -110,24 +122,41 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         mMap.getUiSettings().setCompassEnabled(true);
 
+        manager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
+        mCriteria = new Criteria();
+        String bestProvider = String.valueOf(manager.getBestProvider(mCriteria, true));
 
-        LatLng initPosition = new LatLng(60, 25);
-        mMap.addMarker(new MarkerOptions().position(initPosition).title("I have to change this"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(initPosition, 7));
+        Location mLocation = manager.getLastKnownLocation(bestProvider);
+        if (mLocation != null) {
+            Log.e("TAG", "GPS is on");
+            final double currentLatitude = mLocation.getLatitude();
+            final double currentLongitude = mLocation.getLongitude();
+            LatLng loc1 = new LatLng(currentLatitude, currentLongitude);
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(currentLatitude, currentLongitude), 15));
+            mMap.animateCamera(CameraUpdateFactory.zoomTo(10), 2000, null);
+        }
+
         if (mMap != null) {
             mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
                 @Override
                 public void onMapLongClick(LatLng latLng) {
-                    mMap.addMarker(new MarkerOptions()
-                            .position(latLng)
-                            .title("Marker " + counter++)
-                            .snippet("Intermediate point"));
+                    if (counter == 1) {
+                        mMap.addMarker(new MarkerOptions()
+                                .position(latLng)
+                                .title("Marker " + counter++)
+                                .snippet("Starting point"));
+                    }
+                    else {
+                        mMap.addMarker(new MarkerOptions()
+                                .position(latLng)
+                                .title("Marker " + counter++)
+                                .snippet("Intermediate point")
+                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
+                    }
                     route[counter - 1] = latLng;
-
                 }
             });
             setUpFabs();
-
         }
     }
 
@@ -151,16 +180,19 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         fab1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Toast.makeText(getContext(), "Your running route has been saved!" , Toast.LENGTH_SHORT ).show();
             }
         });
         fab2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Toast.makeText(getContext(), "Your cycling route has been saved!" , Toast.LENGTH_SHORT ).show();
             }
         });
         fab3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Toast.makeText(getContext(), "Your sightseeing route has been saved!" , Toast.LENGTH_SHORT ).show();
             }
         });
         fab4.setOnClickListener(new View.OnClickListener() {
@@ -169,6 +201,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
                 counter = 1;
                 Arrays.fill(route, null);
                 mMap.clear();
+                Toast.makeText(getContext(), "Map cleared and route points deleted." , Toast.LENGTH_SHORT ).show();
             }
         });
     }

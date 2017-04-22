@@ -29,9 +29,9 @@ public class DiscoverFragment extends Fragment {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_discover, container, false);
         TabLayout tabLayout = (TabLayout) view.findViewById(R.id.tab_layout);
-        tabLayout.addTab(tabLayout.newTab().setText("VISIT"));
-        tabLayout.addTab(tabLayout.newTab().setText("RUN"));
-        tabLayout.addTab(tabLayout.newTab().setText("CYCLE"));
+        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_tourism));
+        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_running));
+        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_cyclist));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -62,7 +62,7 @@ public class DiscoverFragment extends Fragment {
             }
         });
 
-        CoordinatorLayout mRootLayout = (CoordinatorLayout) view.findViewById(R.id.coordinatorRootLayout);
+        CoordinatorLayout mRootLayout = (CoordinatorLayout) view.findViewById(R.id.content_discover);
         CollapsingToolbarLayout mCollapsingToolbarLayout = (CollapsingToolbarLayout) view.findViewById(R.id.collapsingToolbarLayoutAndroidExample);
         mCollapsingToolbarLayout.setTitle("Discover");
 
