@@ -1,34 +1,30 @@
 package routify.routify;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
 
 
 public class DiscoverFragment extends Fragment {
-    View view;
-
+    private View view;
+    private TabLayout tabLayout;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_discover, container, false);
-        TabLayout tabLayout = (TabLayout) view.findViewById(R.id.tab_layout);
+
+        tabLayout = (TabLayout) view.findViewById(R.id.tab_layout);
         tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_tourism));
         tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_running));
         tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_cyclist));
@@ -61,19 +57,18 @@ public class DiscoverFragment extends Fragment {
 
             }
         });
-
         CoordinatorLayout mRootLayout = (CoordinatorLayout) view.findViewById(R.id.content_discover);
         CollapsingToolbarLayout mCollapsingToolbarLayout = (CollapsingToolbarLayout) view.findViewById(R.id.collapsingToolbarLayoutAndroidExample);
         mCollapsingToolbarLayout.setTitle("Discover");
 
         return view;
-
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setInitialFragment();
+
     }
     private void setInitialFragment() {
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
@@ -85,5 +80,4 @@ public class DiscoverFragment extends Fragment {
         fragmentTransaction.replace(R.id.container_list, fragment);
         fragmentTransaction.commit();
     }
-
 }

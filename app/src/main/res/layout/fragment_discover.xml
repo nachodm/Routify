@@ -33,7 +33,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
-                    <ImageView
+                   <!--> <ImageView
                         android:id="@+id/myImageView"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -58,7 +58,7 @@
                         android:textSize="28sp"
                         android:fontFamily="sans-serif-condensed"
                         android:textStyle="bold"
-                        android:textColor="@color/white" />
+                        android:textColor="@color/white" /><-->
                 </RelativeLayout>
             </android.support.design.widget.CollapsingToolbarLayout>
         </android.support.design.widget.AppBarLayout>
@@ -83,10 +83,10 @@
                         android:id="@+id/tab_layout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="?attr/colorPrimary"
+                        android:background="@color/colorAccent"
                         android:elevation="6dp"
                         android:minHeight="?attr/actionBarSize"
-                        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
+                        app:tabIndicatorColor="@color/colorPrimary" />
 
                 </LinearLayout>
                 </android.support.v4.widget.NestedScrollView>

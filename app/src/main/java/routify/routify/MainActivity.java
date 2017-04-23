@@ -17,17 +17,17 @@ public class MainActivity extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             Fragment fragment = null;
             switch (item.getItemId()) {
-                case R.id.navigation_home:
-                    fragment = new AccountFragment();
+                case R.id.navigation_discover:
+                    fragment = new DiscoverFragment();
                     break;
                 case R.id.navigation_design:
                     fragment = new MapsFragment();
                     break;
-                case R.id.navigation_discover:
-                    fragment = new DiscoverFragment();
-                    break;
                 case R.id.navigation_social:
                     fragment = new SocialFragment();
+                    break;
+                case R.id.navigation_home:
+                    fragment = new AccountFragment();
                     break;
             }
             replaceFragment(fragment);
@@ -40,10 +40,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        try {
-            getSupportActionBar().setDisplayShowHomeEnabled(true);
-        }
-        catch (NullPointerException e) {}
+
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setLogo(R.mipmap.ic_launcher);
         getSupportActionBar().setDisplayUseLogoEnabled(true);
 
@@ -54,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
     }
     private void setInitialFragment() {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.add(R.id.content, new AccountFragment());
+        fragmentTransaction.add(R.id.content, new DiscoverFragment());
         fragmentTransaction.commit();
     }
 
