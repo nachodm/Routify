@@ -11,18 +11,19 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 public class SocialFragment extends Fragment {
+    View view;
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_social, container, false);
-    }
+        view = inflater.inflate(R.layout.fragment_social, container, false);
+        // Inflate the layout for this fragment
+        return view; }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
+    /*
         String[] routeName = {"Oulu-Tourney", "Swamp-land", "Statue-of-Libertine", "Backalley Vend",
                 "NoGo Traffic", "Skater Eight", "Dooby Dooby Doo", "Old Man Henderson"};
 
@@ -57,6 +58,6 @@ public class SocialFragment extends Fragment {
           //  public void onClick(View v) {
           //      Toast.makeText(getContext(), " Extra Functionality Button ", Toast.LENGTH_SHORT).show();
             //}
-        //});
+        //});*/
     }
 }

@@ -1,5 +1,6 @@
 package routify.routify;
 
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapShader;
@@ -32,7 +33,7 @@ public class AccountFragment extends Fragment {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_account, container, false);
 
-        Bitmap avatar = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.avatar);
+        Bitmap avatar = decodeSampledBitmapFromResource(getResources(), R.drawable.avatar, 80, 80);
         RoundedAvatarDrawable roundedAvatarDrawable = new RoundedAvatarDrawable(avatar);
         ImageView image = (ImageView) view.findViewById(R.id.userProfilePhoto);
         image.setImageDrawable(roundedAvatarDrawable);
@@ -48,14 +49,14 @@ public class AccountFragment extends Fragment {
                 Fragment fragment = null;
                 switch (tab.getPosition()) {
                     case 0:
-                        /*fragment = new UserSightseeing();
-                        break;*/
+                        fragment = new UserSightseeing();
+                        break;
                     case 1:
-                        /*fragment = new UserRunning();
-                        break;*/
+                        fragment = new UserRunning();
+                        break;
                     case 2:
-                        /*fragment = new UserCycling();
-                        break;*/
+                        fragment = new UserCycling();
+                        break;
                 }
                 /*replaceFragment(fragment);*/
             }
@@ -79,7 +80,7 @@ public class AccountFragment extends Fragment {
         /*setInitialFragment();*/
     }
 
-   /* private void setInitialFragment() {
+    /*private void setInitialFragment() {
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
         fragmentTransaction.add(R.id.user_route_lists, new UserSightseeing());
         fragmentTransaction.commit();
@@ -90,6 +91,44 @@ public class AccountFragment extends Fragment {
         fragmentTransaction.commit();
     }*/
 
+
+    public Bitmap decodeSampledBitmapFromResource(Resources res, int resId, int reqWidth, int reqHeight) {
+
+        // First decode with inJustDecodeBounds=true to check dimensions
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeResource(res, resId, options);
+
+        // Calculate inSampleSize
+        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+
+        // Decode bitmap with inSampleSize set
+        options.inJustDecodeBounds = false;
+        return BitmapFactory.decodeResource(res, resId, options);
+    }
+
+    public int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
+
+        // Raw height and width of image
+        int inSampleSize = 1;
+        final int height = options.outHeight;
+        final int width = options.outWidth;
+
+        if (height > reqHeight || width > reqWidth) {
+
+            final int halfHeight = height / 2;
+            final int halfWidth = width / 2;
+
+            // Calculate the largest inSampleSize value that is a power of 2 and keeps both
+            // height and width larger than the requested height and width.
+            while ((halfHeight / inSampleSize) > reqHeight
+                    && (halfWidth / inSampleSize) > reqWidth) {
+                inSampleSize *= 2;
+            }
+        }
+        return inSampleSize;
+    }
+
     private class RoundedAvatarDrawable extends Drawable {
         private final Bitmap mBitmap;
         private final Paint mPaint;
@@ -97,7 +136,7 @@ public class AccountFragment extends Fragment {
         private final int mBitmapWidth;
         private final int mBitmapHeight;
 
-        protected RoundedAvatarDrawable(Bitmap bitmap) {
+        private RoundedAvatarDrawable(Bitmap bitmap) {
             mBitmap = bitmap;
             mRectF = new RectF();
             mPaint = new Paint();
@@ -112,7 +151,6 @@ public class AccountFragment extends Fragment {
         }
 
         @Override
-        @NonNull
         public void draw(Canvas canvas) {
             canvas.drawOval(mRectF, mPaint);
         }

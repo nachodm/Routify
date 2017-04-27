@@ -1,7 +1,6 @@
 package routify.routify;
 
-import android.app.Activity;
-import android.support.v4.app.Fragment;
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,11 +8,10 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 public class CustomList extends ArrayAdapter<String>{
-
-    private final Activity context;
+    private final Context context;
     private final String[] rName;
     private final String[] rDesc;
-    public CustomList(Activity context, String[] rName, String[] rDesc) {
+    public CustomList(Context context, String[] rName, String[] rDesc) {
         super(context, R.layout.list_view, rName);
         this.context = context;
         this.rName = rName;
@@ -23,7 +21,7 @@ public class CustomList extends ArrayAdapter<String>{
 
     @Override
     public View getView(int position, View view, ViewGroup parent) {
-        LayoutInflater inflater = context.getLayoutInflater();
+        LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View rowView= inflater.inflate(R.layout.list_view, null, true);
         TextView txtTitle = (TextView) rowView.findViewById(R.id.routName);
 

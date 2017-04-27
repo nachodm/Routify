@@ -20,9 +20,14 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -33,6 +38,8 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 
 import org.json.JSONObject;
@@ -48,11 +55,9 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-
 public class MapsFragment extends Fragment implements OnMapReadyCallback {
     private View mapView;
     private GoogleMap mMap;
-    public static final int MAX_INTERMEDIATE_POINTS = 50;
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
     public int counter = 1;
     ArrayList<LatLng> route;
@@ -63,6 +68,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     FloatingActionButton fab4;
     LocationManager manager;
     Criteria mCriteria;
+    private DatabaseReference mDatabase;
 
     @Nullable
     @Override
@@ -108,7 +114,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
                         })
                         .create()
                         .show();
-
             } else {
                 // No explanation needed, we can request the permission.
                 ActivityCompat.requestPermissions(getActivity(),
@@ -205,7 +210,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         // Output format
         String output = "json";
 
-        String url = "https://maps.googleapis.com/maps/api/directions/"+output+"?"+parameters;
+        String url = "https://maps.googleapis.com/maps/api/directions/" + output + "?" + parameters;
 
         return url;
     }
@@ -214,7 +219,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         String data = "";
         InputStream iStream = null;
         HttpURLConnection urlConnection = null;
-        try{
+        try {
             URL url = new URL(strUrl);
 
             urlConnection = (HttpURLConnection) url.openConnection();
@@ -230,7 +235,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
             StringBuffer sb  = new StringBuffer();
 
             String line = "";
-            while( ( line = br.readLine())  != null){
+            while((line = br.readLine()) != null) {
                 sb.append(line);
             }
 
@@ -238,9 +243,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
 
             br.close();
 
-        }catch(Exception e){
+        } catch (Exception e) {
             Log.d("URL download exception", e.toString());
-        }finally{
+        } finally {
             iStream.close();
             urlConnection.disconnect();
         }
@@ -257,10 +262,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
             // For storing data from web service
             String data = "";
 
-            try{
+            try {
                 // Fetching the data from web service
                 data = downloadUrl(url[0]);
-            }catch(Exception e){
+            } catch(Exception e){
                 Log.d("Background Task",e.toString());
             }
             return data;
@@ -279,7 +284,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         }
     }
 
-
     private class ParserTask extends AsyncTask<String, Integer, List<List<HashMap<String,String>>>> {
 
         @Override
@@ -288,13 +292,13 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
             JSONObject jObject;
             List<List<HashMap<String, String>>> routes = null;
 
-            try{
+            try {
                 jObject = new JSONObject(jsonData[0]);
                 DirectionsJSONParser parser = new DirectionsJSONParser();
 
                 // Starts parsing data
                 routes = parser.parse(jObject);
-            }catch(Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             return routes;
@@ -307,7 +311,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
             MarkerOptions markerOptions = new MarkerOptions();
 
             // Traversing through all the routes
-            for(int i=0;i<result.size();i++){
+            for(int i = 0; i < result.size(); i++){
                 points = new ArrayList<LatLng>();
                 lineOptions = new PolylineOptions();
 
@@ -315,7 +319,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
                 List<HashMap<String, String>> path = result.get(i);
 
                 // Fetching all the points in i-th route
-                for(int j=0;j<path.size();j++){
+                for(int j = 0; j < path.size(); j++){
                     HashMap<String,String> point = path.get(j);
 
                     double lat = Double.parseDouble(point.get("lat"));
@@ -356,18 +360,52 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         fab1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext(), "Your running route has been saved!" , Toast.LENGTH_SHORT ).show();
+                popUpWindow("running");
+                /*LayoutInflater layoutInflater = (LayoutInflater)getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+
+                View popSwitchView = layoutInflater.inflate(R.layout.save_route_pop_ups, null);
+
+                final PopupWindow popWindow = new PopupWindow(popSwitchView);
+                popWindow.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
+                popWindow.setHeight(ViewGroup.LayoutParams.MATCH_PARENT);
+                popWindow.showAtLocation(popSwitchView, Gravity.CENTER, 0, 0);
+                popWindow.setOutsideTouchable(false);
+                popWindow.setFocusable(true);
+                getResources().
+                Drawable d = getResources().getDrawable(R.drawable.popbg);
+                popWindow.setBackgroundDrawable(d);
+
+                Button CancelButton = (Button)popSwitchView.findViewById(R.id.cancel);
+
+                CancelButton.setOnClickListener(new OnClickListener() {
+
+                    @Override
+                    public void onClick(View v) {
+                        popWindow.dismiss();
+                    }
+                });
+
+                popWindow.showAsDropDown(v, 50, -30);
+
+                return true;
+                default:
+                return false;
+
+
+            }*/
             }
         });
         fab2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                popUpWindow("cycling");
                 Toast.makeText(getContext(), "Your cycling route has been saved!" , Toast.LENGTH_SHORT ).show();
             }
         });
         fab3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                popUpWindow("sightseeing");
                 Toast.makeText(getContext(), "Your sightseeing route has been saved!" , Toast.LENGTH_SHORT ).show();
             }
         });
@@ -381,6 +419,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
             }
         });
     }
+
     private void showFABMenu() {
         isFABOpen=true;
         fab1.animate().translationY(-getResources().getDimension(R.dimen.standard_240));
@@ -395,6 +434,42 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         fab2.animate().translationY(0);
         fab3.animate().translationY(0);
         fab4.animate().translationY(0);
+    }
+
+    public void popUpWindow(String routeCategory) {
+
+        final PopupWindow popupWindow;
+        try {
+            //We need to get the instance of the LayoutInflater, use the context of this activity
+            LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            //Inflate the view from a predefined XML layout
+            View layout = (LinearLayout) inflater.inflate(R.layout.save_route_pop_ups, (ViewGroup) mapView.findViewById(R.id.mapsContainer));
+            // create a 300px width and 470px height PopupWindow
+            popupWindow = new PopupWindow(layout, 300, 470, true);
+            popupWindow.setAnimationStyle(android.R.style.Animation_Dialog);
+
+            popupWindow.showAsDropDown(mapView, 0, 100, Gravity.CENTER);
+
+            popupWindow.setOutsideTouchable(false);
+            Button saveButton = (Button) layout.findViewById(R.id.save_route);
+            saveButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(getContext(), "Your" + route + "route has been saved!" , Toast.LENGTH_SHORT ).show();
+                    popupWindow.dismiss();
+                }
+            });
+            Button cancelButton = (Button) layout.findViewById(R.id.cancel_route);
+            cancelButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    popupWindow.dismiss();
+                }
+            });
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void onDestroyView() {

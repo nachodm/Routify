@@ -51,10 +51,9 @@
 
                         <ImageView
                             android:id="@+id/userProfilePhoto"
-                            android:layout_width="75dp"
-                            android:layout_height="75dp"
+                            android:layout_width="80dp"
+                            android:layout_height="80dp"
                             android:layout_marginRight="16dp"
-                            android:src="@drawable/avatar"
                             android:layout_gravity="center"/>
 
                         <LinearLayout
@@ -186,7 +185,7 @@
                 <android.support.design.widget.TabLayout
                     android:id="@+id/userTabs"
                     android:layout_width="match_parent"
-                    android:layout_height="48dp"
+                    android:layout_height="wrap_content"
                     android:background="?attr/colorAccent"
                     app:tabGravity="fill"
                     app:tabIndicatorColor="@color/white"
