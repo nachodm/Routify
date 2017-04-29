@@ -1,11 +1,14 @@
 package routify.routify;
 
 import android.Manifest;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
@@ -14,17 +17,22 @@ import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
@@ -88,7 +96,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
             startActivity(myIntent);
         }
         return mapView;
-
     }
 
     public boolean checkLocationPermission() {
@@ -360,53 +367,20 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         fab1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                popUpWindow("running");
-                /*LayoutInflater layoutInflater = (LayoutInflater)getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+                showDialog("running");
 
-                View popSwitchView = layoutInflater.inflate(R.layout.save_route_pop_ups, null);
-
-                final PopupWindow popWindow = new PopupWindow(popSwitchView);
-                popWindow.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
-                popWindow.setHeight(ViewGroup.LayoutParams.MATCH_PARENT);
-                popWindow.showAtLocation(popSwitchView, Gravity.CENTER, 0, 0);
-                popWindow.setOutsideTouchable(false);
-                popWindow.setFocusable(true);
-                getResources().
-                Drawable d = getResources().getDrawable(R.drawable.popbg);
-                popWindow.setBackgroundDrawable(d);
-
-                Button CancelButton = (Button)popSwitchView.findViewById(R.id.cancel);
-
-                CancelButton.setOnClickListener(new OnClickListener() {
-
-                    @Override
-                    public void onClick(View v) {
-                        popWindow.dismiss();
-                    }
-                });
-
-                popWindow.showAsDropDown(v, 50, -30);
-
-                return true;
-                default:
-                return false;
-
-
-            }*/
             }
         });
         fab2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                popUpWindow("cycling");
-                Toast.makeText(getContext(), "Your cycling route has been saved!" , Toast.LENGTH_SHORT ).show();
+                showDialog("cycling");
             }
         });
         fab3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                popUpWindow("sightseeing");
-                Toast.makeText(getContext(), "Your sightseeing route has been saved!" , Toast.LENGTH_SHORT ).show();
+                showDialog("sightseeing");
             }
         });
         fab4.setOnClickListener(new View.OnClickListener() {
@@ -436,40 +410,38 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         fab4.animate().translationY(0);
     }
 
-    public void popUpWindow(String routeCategory) {
+    public void showDialog (final String routeCategory) {
+        final Dialog dialog = new Dialog(getActivity());
+        dialog.setContentView(R.layout.save_route_pop_ups);
+        dialog.setTitle(routeCategory);
 
-        final PopupWindow popupWindow;
-        try {
-            //We need to get the instance of the LayoutInflater, use the context of this activity
-            LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            //Inflate the view from a predefined XML layout
-            View layout = (LinearLayout) inflater.inflate(R.layout.save_route_pop_ups, (ViewGroup) mapView.findViewById(R.id.mapsContainer));
-            // create a 300px width and 470px height PopupWindow
-            popupWindow = new PopupWindow(layout, 300, 470, true);
-            popupWindow.setAnimationStyle(android.R.style.Animation_Dialog);
+        EditText routeName = (EditText) dialog.findViewById(R.id.routeName);
+        EditText routeDescription = (EditText) dialog.findViewById(R.id.routeDescription);
 
-            popupWindow.showAsDropDown(mapView, 0, 100, Gravity.CENTER);
+        Button saveButton = (Button) dialog.findViewById(R.id.save_route);
+        // if button is clicked, save the route
+        saveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Create child
+                // Assign value
 
-            popupWindow.setOutsideTouchable(false);
-            Button saveButton = (Button) layout.findViewById(R.id.save_route);
-            saveButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Toast.makeText(getContext(), "Your" + route + "route has been saved!" , Toast.LENGTH_SHORT ).show();
-                    popupWindow.dismiss();
-                }
-            });
-            Button cancelButton = (Button) layout.findViewById(R.id.cancel_route);
-            cancelButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    popupWindow.dismiss();
-                }
-            });
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+                Toast.makeText(getContext(), "Your" + routeCategory +  "route has been saved!" , Toast.LENGTH_SHORT ).show();
+                dialog.dismiss();
+            }
+        });
+
+        Button cancelButton = (Button) dialog.findViewById(R.id.cancel_route);
+        // if button is clicked, close the custom dialog
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
     }
 
     public void onDestroyView() {
