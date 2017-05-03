@@ -13,7 +13,6 @@ import android.graphics.RectF;
 import android.graphics.Shader;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -58,7 +57,7 @@ public class AccountFragment extends Fragment {
                         fragment = new UserCycling();
                         break;
                 }
-                /*replaceFragment(fragment);*/
+                replaceFragment(fragment);
             }
 
             @Override
@@ -77,20 +76,19 @@ public class AccountFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        /*setInitialFragment();*/
+        setInitialFragment();
     }
 
-    /*private void setInitialFragment() {
-        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+   private void setInitialFragment() {
+        FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
         fragmentTransaction.add(R.id.user_route_lists, new UserSightseeing());
         fragmentTransaction.commit();
     }
     private void replaceFragment(Fragment fragment) {
-        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.user_route_lists, fragment);
         fragmentTransaction.commit();
-    }*/
-
+    }
 
     public Bitmap decodeSampledBitmapFromResource(Resources res, int resId, int reqWidth, int reqHeight) {
 

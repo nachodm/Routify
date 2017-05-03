@@ -11,6 +11,7 @@ import android.widget.ListView;
 
 
 public class UserCycling extends Fragment {
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -25,7 +26,7 @@ public class UserCycling extends Fragment {
 
         CustomList adapter = new CustomList(getActivity(), routeName, routeDesc);
 
-        ListView listViewA = (ListView) view.findViewById(R.id.rout_list);
+        ListView listViewA = (ListView) view.findViewById(R.id.uc_rout_list);
         listViewA.setAdapter(adapter);
         return view;
 

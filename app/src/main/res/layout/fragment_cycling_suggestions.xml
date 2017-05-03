@@ -5,5 +5,11 @@
     tools:context="routify.routify.Cycling_suggestions"
     android:background="@color/colorPrimaryDark">
 
+    <ListView
+        android:id="@+id/cs_rout_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    </ListView>
+
 
 </LinearLayout>

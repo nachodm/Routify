@@ -5,7 +5,7 @@
     tools:context="routify.routify.Sightseeing_suggestions">
 
     <ListView
-        android:id="@+id/rout_list"
+        android:id="@+id/ss_rout_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
     </ListView>

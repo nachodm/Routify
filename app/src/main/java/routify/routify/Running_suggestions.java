@@ -23,9 +23,9 @@ public class Running_suggestions extends Fragment {
                 "defult text I dont know what to write on it", "defult text I dont know what to write on it", "defult text I dont know what to write on it",
                 "default text I dont know what to write on it", "defult text I dont know what to write on it", "defult text I dont know what to write on it"};
 
-        CustomList adapter = new CustomList(getActivity(), routeName, routeDesc);
+        CustomList adapter = new CustomList(this.getActivity(), routeName, routeDesc);
 
-        ListView listViewB = (ListView) view.findViewById(R.id.rout_list);
+        ListView listViewB = (ListView) view.findViewById(R.id.rs_rout_list);
         listViewB.setAdapter(adapter);
         return view;
     }

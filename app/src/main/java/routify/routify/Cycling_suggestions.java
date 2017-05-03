@@ -21,9 +21,9 @@ public class Cycling_suggestions extends Fragment {
                 "defult text I dont know what to write on it", "defult text I dont know what to write on it", "defult text I dont know what to write on it",
                 "default text I dont know what to write on it", "defult text I dont know what to write on it", "defult text I dont know what to write on it"};
 
-        CustomList adapter = new CustomList(getActivity(), routeName, routeDesc);
+        CustomList adapter = new CustomList(this.getActivity(), routeName, routeDesc);
 
-        ListView listViewC = (ListView) view.findViewById(R.id.rout_list);
+        ListView listViewC = (ListView) view.findViewById(R.id.cs_rout_list);
         listViewC.setAdapter(adapter);
         return view;
     }

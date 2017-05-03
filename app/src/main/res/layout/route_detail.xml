@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginBottom="@dimen/activity_vertical_margin">
+
+    <TextView
+        android:id="@+id/detailRouteName"
+        android:textSize="26dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="4dp"
+        android:layout_gravity="center"
+        android:textColor="@color/colorAccent"/>
+    <android.support.v7.widget.AppCompatRatingBar
+        android:id="@+id/MyRatingDetail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:isIndicator="true"
+        android:numStars="5"
+        android:stepSize="0.1"
+        android:layout_alignParentLeft="false"
+        android:layout_gravity="center"/>
+
+    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_margin="10dp"
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="250dp"
+        android:layout_height="220dp"
+        />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp">
+        <Button
+            android:id="@+id/join_route_button"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:gravity="center"
+            android:layout_marginRight="10dp"
+            android:layout_weight="1"
+            android:text="Follow"
+            android:background="@color/colorAccent"/>
+
+        <Button
+            android:id="@+id/back_routes_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:gravity="center"
+            android:layout_marginRight="10dp"
+            android:layout_weight="1"
+            android:text="Back"
+            android:background="@color/colorPrimaryDark"/>
+    </LinearLayout>
+
+</LinearLayout>

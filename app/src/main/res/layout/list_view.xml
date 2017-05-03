@@ -8,12 +8,13 @@
         android:orientation="horizontal">
         <TextView
             android:id="@+id/routName"
+            android:layout_marginTop="2dp"
             android:layout_marginStart="4dp"
             android:layout_marginLeft="4dp"
             android:layout_marginRight="20dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="20sp"
+            android:textSize="26sp"
             android:layout_weight="1"
             android:textColor="@color/colorAccent"/>
         <LinearLayout
@@ -31,7 +32,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:isIndicator="true"
-                    android:layout_marginLeft="4dp"
                     android:numStars="5"
                     android:stepSize="0.1"
                     android:layout_alignParentLeft="true"/>
@@ -39,11 +39,11 @@
 
             <TextView
                 android:id="@+id/numberOfLikes"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_marginStart="0dp"
-                android:layout_marginLeft="0dp"
-                android:text="10974 likes" />
+                android:layout_marginLeft="4dp"
+                android:text="1097 votes" />
         </LinearLayout>
 
     </LinearLayout>
@@ -51,7 +51,11 @@
     <TextView
         android:id="@+id/routDesc"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="2dp"/>
 
 
 </TableLayout>

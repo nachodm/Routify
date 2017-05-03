@@ -28,7 +28,6 @@ public class CustomList extends ArrayAdapter<String>{
         TextView txtTitle2 = (TextView) rowView.findViewById(R.id.routDesc);
         txtTitle.setText(rName[position]);
         txtTitle2.setText(rDesc[position]);
-
         return rowView;
     }
 }

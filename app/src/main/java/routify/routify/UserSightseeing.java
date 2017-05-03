@@ -24,7 +24,7 @@ public class UserSightseeing extends Fragment {
 
         CustomList adapter = new CustomList(getActivity(), routeName, routeDesc);
 
-        ListView listViewA = (ListView) view.findViewById(R.id.rout_list);
+        ListView listViewA = (ListView) view.findViewById(R.id.us_rout_list);
         listViewA.setAdapter(adapter);
         return view;
     }

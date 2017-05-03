@@ -3,5 +3,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="routify.routify.UserRunning">
+    <ListView
+        android:id="@+id/ur_rout_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    </ListView>
 
 </FrameLayout>

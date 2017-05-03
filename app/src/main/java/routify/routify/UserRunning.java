@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 
@@ -17,6 +18,7 @@ public class UserRunning extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_user_running, container, false);
+
         String[] routeName = {"Oulu", "Oulu Beach", "Rovaniemi", "Oulu", "Helsinki", "Rovaniemi", "Tampere", "Oulanka", "Turku", "Tornio", "Haparanda"};
 
         String[] routeDesc = {"Completely flat running route", "Running with the best views in Nallikari Beach", "defult text I dont know what to write on it", "defult text I dont know what to write on it", "defult text I dont know what to write on it", "defult text I dont know what to write on it",
@@ -25,8 +27,16 @@ public class UserRunning extends Fragment {
 
         CustomList adapter = new CustomList(getActivity(), routeName, routeDesc);
 
-        ListView listViewA = (ListView) view.findViewById(R.id.rout_list);
+        ListView listViewA = (ListView) view.findViewById(R.id.ur_rout_list);
         listViewA.setAdapter(adapter);
+
+        listViewA.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+            }
+        });
+
         return view;
     }
 

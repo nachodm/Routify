@@ -3,9 +3,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="routify.routify.UserSightseeing">
-    <TextView
+    <ListView
+        android:id="@+id/us_rout_list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Sightseeing list" />
-
+        android:layout_height="wrap_content">
+    </ListView>
 </FrameLayout>

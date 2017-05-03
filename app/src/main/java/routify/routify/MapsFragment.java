@@ -7,43 +7,45 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.PopupWindow;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
+import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.firebase.database.DatabaseReference;
@@ -64,6 +66,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class MapsFragment extends Fragment implements OnMapReadyCallback {
+
     private View mapView;
     private GoogleMap mMap;
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
@@ -83,6 +86,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mapView = inflater.inflate(R.layout.fragment_maps, container, false);
 
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+
         try {
             SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
             mapFragment.getMapAsync(MapsFragment.this);
@@ -90,12 +95,17 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
             e.printStackTrace();
         }
 
-       manager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
+        /*manager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
         if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             Intent myIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
             startActivity(myIntent);
-        }
+        }*/
         return mapView;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
     }
 
     public boolean checkLocationPermission() {
@@ -104,7 +114,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
             if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
                     Manifest.permission. ACCESS_FINE_LOCATION)) {
 
-                // Show an explanation to the user *asynchronously* -- don't block
+                // Show an explanation to the user *asynchronously*
                 // this thread waiting for the user's response! After the user
                 // sees the explanation, try again to request the permission.
                 new AlertDialog.Builder(getContext())
@@ -132,7 +142,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
             return true;
         }
     }
-
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -368,7 +377,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
             @Override
             public void onClick(View v) {
                 showDialog("running");
-
             }
         });
         fab2.setOnClickListener(new View.OnClickListener() {
@@ -415,8 +423,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         dialog.setContentView(R.layout.save_route_pop_ups);
         dialog.setTitle(routeCategory);
 
-        EditText routeName = (EditText) dialog.findViewById(R.id.routeName);
-        EditText routeDescription = (EditText) dialog.findViewById(R.id.routeDescription);
+        final EditText routeName = (EditText) dialog.findViewById(R.id.routeName);
+        final EditText routeDescription = (EditText) dialog.findViewById(R.id.routeDescription);
 
         Button saveButton = (Button) dialog.findViewById(R.id.save_route);
         // if button is clicked, save the route
@@ -425,9 +433,12 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
             public void onClick(View v) {
                 // Create child
                 // Assign value
+                mDatabase.child("Routes").child(routeCategory).child(routeName.getText().toString());
+                for (int i = 0; i < route.size(); i++) {
+                    mDatabase.child("Routes").child(routeName.getText().toString()).child("point" + i).child("LatLng").setValue(route.toArray()[i]);
+                }
 
-
-                Toast.makeText(getContext(), "Your" + routeCategory +  "route has been saved!" , Toast.LENGTH_SHORT ).show();
+                Toast.makeText(getContext(), "Your " + routeCategory +  " route has been saved!" , Toast.LENGTH_SHORT ).show();
                 dialog.dismiss();
             }
         });
@@ -445,16 +456,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     }
 
     public void onDestroyView() {
-        try {
-            Fragment fragment = (getChildFragmentManager().findFragmentById(R.id.map));
-            if (fragment != null) {
-                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-                ft.remove(fragment);
-                ft.commit();
-            }
-        } catch (Exception e){
-            e.printStackTrace();
-        }
         super.onDestroyView();
     }
 }

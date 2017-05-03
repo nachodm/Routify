@@ -10,12 +10,13 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <android.support.v7.widget.RecyclerView
+        <android.support.v4.widget.NestedScrollView
             android:id="@+id/user_route_lists"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            android:background="@color/colorPrimaryDark"/>
+            android:fillViewport="true"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        </android.support.v4.widget.NestedScrollView>
 
         <android.support.design.widget.AppBarLayout
             android:id="@+id/AccountBarLayout"
@@ -188,8 +189,7 @@
                     android:layout_height="wrap_content"
                     android:background="?attr/colorAccent"
                     app:tabGravity="fill"
-                    app:tabIndicatorColor="@color/white"
-                    app:tabIndicatorHeight="4dp"
+                    app:tabIndicatorColor="@color/colorPrimary"
                     app:tabMode="fixed" />
             </FrameLayout>
         </android.support.design.widget.AppBarLayout>

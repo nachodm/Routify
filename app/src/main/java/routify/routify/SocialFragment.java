@@ -1,5 +1,6 @@
 package routify.routify;
 
+import android.icu.text.DisplayContext;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -10,14 +11,22 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.lang.reflect.Type;
+
 public class SocialFragment extends Fragment {
     View view;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_social, container, false);
+
         // Inflate the layout for this fragment
-        return view; }
+        return view;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -60,4 +69,5 @@ public class SocialFragment extends Fragment {
             //}
         //});*/
     }
+
 }
